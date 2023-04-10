@@ -23,7 +23,6 @@ public class PostLikeController {
     public Boolean postLike(@PathVariable Long boardId, @AuthenticationPrincipal User user,
         RedirectAttributes redirectAttributes) {
         Long memberId = user.getId();
-        //        redirectAttributes.addAttribute("boardId", boardId);
         return postLikeService.pushLikeButton(boardId, memberId);
     }
 

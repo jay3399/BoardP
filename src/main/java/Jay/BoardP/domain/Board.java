@@ -25,7 +25,6 @@ import org.hibernate.annotations.Formula;
 public class Board extends TimeEntity{
 
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
@@ -53,13 +52,14 @@ public class Board extends TimeEntity{
     // 1. 양방향매핑 , size이용시 쿼리가 비효율적으로 나간다
     // 2. jpql count는 조금은 생략이 가능하지만 , 그래도 여전히 쿼리가 많이나간다
     // 3. formula를 이용 , 생성시점에서 가상의 컬럼을 카운트쿼리로 만를어놓고 사용한다
-    @Formula("select count(*) from POST_LIKE l where l.board_board_id = board_id")
+
+    @Formula( value = "(select count(*) from POST_LIKE l where l.board_board_id = board_id)")
     private int countOfLikes;
 
-    @Formula("select count(*) from BOARD_COMMENT C where C.board_id = board_id")
+    @Formula(value = "(select count(*) from BOARD_COMMENT C where C.board_id = board_id)")
     private int countOfComments;
 
-    @Formula("select count(*) from PENALTY P where P.board_id = board_id")
+    @Formula( value = "(select count(*) from PENALTY P where P.board_id = board_id)")
     private int countOfPenalties;
 
 

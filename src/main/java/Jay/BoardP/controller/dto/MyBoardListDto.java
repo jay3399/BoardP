@@ -2,9 +2,12 @@ package Jay.BoardP.controller.dto;
 
 import Jay.BoardP.domain.Board;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyBoardListDto {
 
     private Long id;

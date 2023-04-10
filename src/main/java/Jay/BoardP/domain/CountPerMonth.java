@@ -35,21 +35,6 @@ public class CountPerMonth {
     }
 
 
-//    protected CountPerMonth(Long visitPerDay, Long signInPerDay,
-//        Long boardPerDay, Long boardCntPerDay, Long signUpPerDay) {
-//        this.visitPerMonth = visitPerDay;
-//        this.signInPerMonth = signInPerDay;
-//        this.signUpPerMonth = boardPerDay;
-//        this.boardPerMonth = boardCntPerDay;
-//        this.boardCntPerMonth = signUpPerDay;
-//    }
-
-//    public static CountPerMonth createCountPerMonth(Long id, Long visitPerDay, Long signInPerDay,
-//        Long boardPerDay, Long boardCntPerDay, Long signUpPerDay) {
-//
-//        return new CountPerMonth(Long id, visitPerDay, signInPerDay, boardPerDay, boardCntPerDay, signUpPerDay);
-//    }
-
 
     public void addVisitPerMonth(CountPerDay
         countPerDay) {

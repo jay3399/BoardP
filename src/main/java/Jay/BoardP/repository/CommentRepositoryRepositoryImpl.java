@@ -25,17 +25,6 @@ public class CommentRepositoryRepositoryImpl implements CommentRepositoryCustom 
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-//
-//    @Override
-//    public Long save(BoardComment comment) {
-//        em.persist(comment);
-//        return comment.getId();
-//    }
-
-//    @Override
-//    public BoardComment findById(Long id) {
-//        return em.find(BoardComment.class, id);    }
-//
     @Override
     public List<BoardComment> findByBoardId(Long boardId) {
         Board board = em.find(Board.class, boardId);

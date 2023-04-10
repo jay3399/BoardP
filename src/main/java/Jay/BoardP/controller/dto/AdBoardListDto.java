@@ -3,9 +3,7 @@ package Jay.BoardP.controller.dto;
 
 import Jay.BoardP.domain.Board;
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class AdBoardListDto {
@@ -21,10 +19,6 @@ public class AdBoardListDto {
     private Long totalComments;
 
     private Boolean isDeleted;
-
-    public void setTotalComments(Long comments) {
-        this.totalComments  = comments;
-    }
 
 
     public void set(Board board) {

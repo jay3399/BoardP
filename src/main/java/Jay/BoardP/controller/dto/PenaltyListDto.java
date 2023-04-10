@@ -1,6 +1,5 @@
 package Jay.BoardP.controller.dto;
 
-
 import Jay.BoardP.domain.Penalty;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;

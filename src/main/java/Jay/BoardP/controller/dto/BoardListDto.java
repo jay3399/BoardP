@@ -4,9 +4,12 @@ package Jay.BoardP.controller.dto;
 import Jay.BoardP.domain.Board;
 import Jay.BoardP.domain.File;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardListDto {
 
     private Long id;
@@ -27,15 +30,6 @@ public class BoardListDto {
 
     private Boolean isDeleted;
 
-
-    private BoardListDto() {
-
-    }
-//
-//    public void setTotalComments(Long comments) {
-//        this.totalComments = comments;
-//    }
-
     public void set(Board board) {
         this.id = board.getId();
         this.title =board.getTitle();
@@ -45,7 +39,6 @@ public class BoardListDto {
         this.isDeleted = board.getIsDeleted();
         this.postLike = Long.valueOf(board.getCountOfLikes());
         this.totalComments = Long.valueOf(board.getCountOfComments());
-//        this.postLike = (long) board.getPostLikes().size();
         this.mainImage =
             (board.getFiles().size() != 0) ? board.getFiles()
                 .get(0) : null;
@@ -57,22 +50,6 @@ public class BoardListDto {
 
     }
 
-
-//    public void set(Board board) {
-//        this.postLike = (long) board.getPostLikes().size();
-//        this.mainImage =
-//            (board.getFiles().size() != 0) ? board.getFiles()
-//                .get(0) : null;
-//        this.ipAddress = board.getIpAddress();
-//        this.categoryName = (board.getCategory().getCode().equals("FREE")) ? "잡담" :
-//            (board.getCategory().getCode().equals("QNA")) ? "질문" :
-//                (board.getCategory().getCode().equals("FUN")) ? "유머" : "ETC";
-//
-//    }
-//
-//    public void setTotalComments(Long comments) {
-//        this.totalComments = comments;
-//    }
 
 
     public static BoardListDto from(Board board) {

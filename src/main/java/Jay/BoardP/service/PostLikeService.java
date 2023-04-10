@@ -57,9 +57,6 @@ public class PostLikeService {
             Long boardId = Long.parseLong(result.split("::")[1]);
             Long memberId = Long.parseLong(result.split("::")[2]);
 
-            System.out.println("boardId = " + boardId);
-            System.out.println("memberId = " + memberId);
-
 
             Board board1 = boardRepository.findOne(boardId);
             Member member = memberRepository.findMember(memberId);
@@ -76,8 +73,6 @@ public class PostLikeService {
         }
 
     }
-
-
 
 
     @CacheEvict(value = "board" , key = "#boardId")
@@ -103,41 +98,6 @@ public class PostLikeService {
         postLike.removeMember(member, board);
         repository.deleteById(postLike.getId());
     }
-
-
-
-
-//    public Boolean pushLikeButton(PostLikeDto postLikeDto) {
-//        postLikeRepository.exist(postLikeDto.getMember().getId(), postLikeDto.getBoard().getId())
-//            .ifPresentOrElse(
-//                (postLike) -> removePostLike(postLike, postLikeDto)
-//                ,
-//                () -> {
-//                    Board board = getBoard(postLikeDto);
-//                    repository.save(PostLike.createPostLike(postLikeDto.getMember(), board));
-//                });
-//
-//        return true;
-//    }
-//
-//    public Long totalNumOfLikeOnBoard(Long boardId) {
-//        Long postLikeNum = postLikeRepository.findPostLikeNum(boardId);
-//        return postLikeNum;
-//    }
-//
-//    private Board getBoard(PostLikeDto postLikeDto) {
-//        return boardRepository.findBoard(postLikeDto.getBoard().getId());
-//    }
-//
-//    private void removePostLike(PostLike postLike, PostLikeDto postLikeDto ) {
-//        postLike.removeMember(postLikeDto.getMember(), postLikeDto.getBoard());
-//        repository.deleteById(postLike.getId());
-//    }
-
-
-
-
-
 
 
 

@@ -2,9 +2,12 @@ package Jay.BoardP.controller.dto;
 
 import Jay.BoardP.domain.Member;
 import java.sql.Date;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDto {
 
     private Long id;
@@ -20,7 +23,6 @@ public class MemberDto {
     private String phoneNumber;
 
     private String email;
-//    private Address address;
 
 
 
@@ -32,7 +34,6 @@ public class MemberDto {
         this.birthDate = member.getBirthDate();
         this.phoneNumber = member.getPhoneNumber();
         this.email = member.getEmail();
-//        this.address = member.getAddress();
     }
 
 

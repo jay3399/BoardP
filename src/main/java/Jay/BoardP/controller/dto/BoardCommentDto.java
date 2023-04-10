@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardCommentDto{
 
     private Long id;
@@ -46,12 +47,8 @@ public class BoardCommentDto{
         this.createdDate = boardComment.getCreatedDate();
         this.likeNum = boardComment.getCountsOfLike();
         this.disLikeNum = boardComment.getCountsOfDisLike();
-//        this.createdDate = boardComment.getCreatedDate();
         this.deleteStatus = boardComment.getIsDeleted();
 
-//        int size = boardComment.getDisLikes().size();
-//        // 사이즈로 가져오면 계속해서 쿼리를 날린다
-//
     }
 
     public static BoardCommentDto fromEntity(BoardComment boardComment) {

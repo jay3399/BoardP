@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -70,10 +69,10 @@ public class Member extends TimeEntity {
     private List<Board> boardList = new ArrayList<>();
 
 
-    @Formula("select count(*) from BOARD b where b.member_id = member_id")
+    @Formula(value = "(select count(*) from BOARD b where b.member_id = member_id)")
     private Long countOfBoards;
 
-    @Formula("select count(*) from BOARD_COMMENT b where b.member_id = member_id")
+    @Formula(value = "(select count(*) from BOARD_COMMENT b where b.member_id = member_id)")
     private Long countOfComments;
 
     @Enumerated(EnumType.STRING)

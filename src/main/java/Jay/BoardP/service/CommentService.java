@@ -86,7 +86,6 @@ public class CommentService {
     public List<BoardCommentDto> findByBoardIdV2(Long boardId) {
         List<BoardComment> comments = repository.findByBoardIdV2(boardId);
 
-        System.out.println("comments = " + comments);
 
         List<BoardCommentDto> result = new ArrayList<>();
         Map<Long, BoardCommentDto> map = new HashMap<>();
@@ -94,9 +93,7 @@ public class CommentService {
         comments.stream().forEach(boardComment -> {
 
                 BoardCommentDto boardCommentDto = BoardCommentDto.fromEntity(boardComment);
-
-                System.out.println("boardCommentDto = " + boardCommentDto);
-                //n+1 문제때문에 ,  계속해서 쿼라문을 날린다 . --------------------------------
+                //n+1 문제때문에 ,  계속해서 쿼라문을 날린다 .
 
                 map.put(boardCommentDto.getId(), boardCommentDto);
                 //dto생성후 , map에 해당 id와 value값 넣고
@@ -105,7 +102,6 @@ public class CommentService {
             if (boardComment.getParent() != null) {
                 boardCommentDto.setParentId(boardComment.getParent().getId());
                 Long id = boardComment.getParent().getId();
-                System.out.println("id = " + id);
                 map.get(boardComment.getParent().getId()).getChild().add(boardCommentDto);
             } else {
                 result.add(boardCommentDto);
@@ -145,8 +141,6 @@ public class CommentService {
     @Transactional
     public Boolean deleteComment(Long commentId, Long boardId) {
         BoardComment comment = repository.findByIdWithParent(commentId).orElseThrow(null);
-        System.out.println("join = " + comment);
-        System.out.println("commentId = " + commentId);
 
         if (comment.getChild().size() != 0) {
             comment.changeDeletedStatus(DeleteStatus.Y);

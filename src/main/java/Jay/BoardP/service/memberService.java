@@ -53,17 +53,12 @@ public class memberService {
 
         Member memberByEmail = memberRepository.findMemberByEmailAndUserId(email, userId);
 
-//        if (memberByEmail != null) {
-//            return true;
-//        }
-
         return memberByEmail;
     }
 
 
     @Transactional
     public void editPassword(Long memberId, String password) {
-        System.out.println("password = " + password);
         Member member = memberRepository.findMember(memberId);
         member.setPassword(passwordEncoder.encode(password));
     }

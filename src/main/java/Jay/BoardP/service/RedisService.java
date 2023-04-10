@@ -26,7 +26,6 @@ public class RedisService {
 
     public boolean isFirstRequest(String clientAddress, Long postId) {
         String key = getKey(clientAddress, postId);
-        log.debug("user key:{}", key);
 
         if (redisTemplate.hasKey(key)) {
             return false;
@@ -36,7 +35,6 @@ public class RedisService {
     }
     public void writeRequest(String clientAddress, Long postId) {
         String key = getKey(clientAddress, postId);
-        log.debug("user key:{}", key);
 
         redisTemplate.opsForValue().set(key, clientAddress);
         redisTemplate.expire(key, 1L, TimeUnit.DAYS);

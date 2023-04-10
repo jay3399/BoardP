@@ -5,7 +5,6 @@ import Jay.BoardP.controller.dto.BoardListDto;
 import Jay.BoardP.controller.dto.BoardPostDto;
 import Jay.BoardP.controller.dto.BoardSearch;
 import Jay.BoardP.controller.dto.FileDto;
-import Jay.BoardP.controller.dto.FileStore;
 import Jay.BoardP.controller.dto.MyBoardListDto;
 import Jay.BoardP.controller.form.BoardEditForm;
 import Jay.BoardP.domain.Board;
@@ -25,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

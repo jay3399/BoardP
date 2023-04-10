@@ -16,7 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 
-//@EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -27,25 +26,26 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
 
         httpSecurity.authorizeRequests()
-            .antMatchers("/members/**", "/login/**", "/css/**", "/images/**", "/js/**", "/" , "/find/**")
-            .permitAll()
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .antMatchers("/boards/**").hasAnyRole("USER", "ADMIN", "PENALTY")
-            .anyRequest().authenticated()
-            .and()
-            .formLogin().loginPage("/login")
-            .usernameParameter("userId")
-            .successHandler(loginSuccessHandler)
-            .loginProcessingUrl("/login")
-//             .defaultSuccessUrl("/")
-            .failureUrl("/login")
-            .and()
-            .csrf().disable()
-            .sessionManagement()
-            .maximumSessions(1)
-            .maxSessionsPreventsLogin(false)
-            .expiredUrl("/")
-            .sessionRegistry(sessionRegistry());
+                .antMatchers("/members/**", "/login/**", "/css/**", "/images/**", "/js/**", "/", "/find/**")
+                .permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/boards/**").hasAnyRole("USER", "ADMIN", "PENALTY")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/login")
+                .usernameParameter("userId")
+                .successHandler(loginSuccessHandler)
+                .loginProcessingUrl("/login")
+                .failureUrl("/login")
+                .and()
+//                .oauth2Login().loginPage("login")
+                .csrf().disable()
+                .sessionManagement()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredUrl("/")
+                .sessionRegistry(sessionRegistry());
+
 
         return httpSecurity.build();
     }

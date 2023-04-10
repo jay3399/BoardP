@@ -67,10 +67,11 @@ public class BoardComment extends TimeEntity {
     private List<CommentLike> likes = new ArrayList<>();
 
 
-    @Formula("select count(*) from comment_like l where l.board_coment_id = board_coment_id")
+//    @Formula("select count(*) from comment_like l where l.board_coment_id = board_coment_id")
+    @Formula(value = "(select count(*) from comment_like l where l.board_coment_id = board_coment_id)")
     private Long countsOfLike;
 
-    @Formula("select count(*) from comment_dis_like d where d.board_coment_id = board_coment_id")
+    @Formula(value = "(select count(*) from comment_dis_like d where d.board_coment_id = board_coment_id)")
     private Long countsOfDisLike;
 
     public void setBoard(Board board) {

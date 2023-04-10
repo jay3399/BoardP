@@ -41,31 +41,11 @@ public class BoardPostDto {
         this.categoryCode = categoryCode;
     }
 
-//    public static BoardPostDto createBoardPostDto(String nickName, String title, String content,
-//        Map<FileType, List<MultipartFile>> attachmentFiles) {
-//        BoardPostDto boardPostDto = new BoardPostDto();
-//        boardPostDto.setTitle(title);
-//        boardPostDto.setContent(content);
-//        boardPostDto.setAttachmentFiles(attachmentFiles);
-//        return boardPostDto;
-//    }
-
-
-//    public static Board createWriteBoard(Member member, BoardPostDto dto ) {
-//        Board board = Board.createBoard(dto.title, dto.getContent(), dto.ipAddress, member , dto.getCategoryCode());
-//        return board;
-//    }
 
     public Board createBoard(Member member) {
         return Board.createBoard(title, content, ipAddress, member, categoryCode);
     }
 
-//    public static Board createWriteBoar
-//    dV2(Member member, BoardPostDto dto ) {
-//        Board board = Board.createBoard(member.getNickname(), dto.getTitle(), dto.getContent() ,
-//            dto.getIpAddress() , dto.getCategory());
-//        return board;
-//    }
 
 
 }

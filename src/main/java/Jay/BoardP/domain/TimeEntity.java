@@ -26,9 +26,4 @@ public abstract class TimeEntity {
     private LocalDateTime modifiedDate;
 
 
-//    @CreatedBy
-//    @Column(updatable = false)
-//    private String createdBy;
-//
-
 }

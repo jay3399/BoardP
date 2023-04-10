@@ -28,8 +28,6 @@ public class PostLikeRepositoryImpl implements PostLikeCustom {
         PostLike postLike = jpaQueryFactory.selectFrom(qPostLike)
             .where(qPostLike.member.id.eq(memberId), qPostLike.board.id.eq(boardId)).fetchFirst();
 
-        System.out.println("postLike = " + postLike);
-
         return Optional.ofNullable(postLike);
 
 

@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardEditForm {
 
     @NotBlank(message = "제목을 입력해주세요.")
@@ -39,11 +40,6 @@ public class BoardEditForm {
         form.set(dto);
         return form;
     }
-
-
-
-
-
 
 
 

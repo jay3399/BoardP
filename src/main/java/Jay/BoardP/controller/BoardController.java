@@ -23,7 +23,6 @@ import Jay.BoardP.service.memberService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,7 +47,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-//@RestController
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -81,13 +78,12 @@ public class BoardController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-//        return pages;
         return "board/boardList";
     }
 
     @GetMapping("/boards/{categoryCode}/category")
     public String BoardList(
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
+        @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
         @PathVariable("categoryCode") String categoryCode, Model model,
         @ModelAttribute("boardSearch") BoardSearch boardSearch) {
 
@@ -131,8 +127,9 @@ public class BoardController {
         String ipAddress = getIpAddress(req);
         String key = "boardCountPerDay";
 
+        //2분마다 , 스케줄이용 viewCnt 값을 디비에 반영
         if (redisService.isFirstRequest(ipAddress, boardId)) {
-            boardService.viewCountWithRedisWithFirst(boardId);   // viewCnt담기
+            boardService.viewCountWithRedisWithFirst(boardId);   // viewCnt
             redisService.writeRequest(ipAddress, boardId);   // 중복방지
 
             makeUpdateCount(key); //일일 전체 보드 카운트수
@@ -143,22 +140,13 @@ public class BoardController {
 
         List<BoardCommentDto> commentDto = commentService.findByBoardIdV2(boardId);
 
-        //첫요청일때만 생성 ?!
+        //첫요청일때만생성
 
         String viewCnt = String.valueOf(redisTemplate.opsForValue().get("viewCnt::" + boardId));
 
         BoardDetailedDto boardDetailedDto = boardService.findBoardOnCount(boardId);
 
         List<FileDto> boardsFiles = boardService.findBoardsFiles(boardId);
-
-        for (FileDto boardsFile : boardsFiles) {
-            System.out.println("boardsFile = " + boardsFile.getFileType());
-            System.out.println(
-                "boardsFile.getOriginalFilename() = " + boardsFile.getOriginalFilename());
-            System.out.println("boardsFile = " + boardsFile.getStoredFilename());
-        }
-
-//        Long comments = commentService.totalComments(boardId); 쿼리조회를 포뮬러로
 
         String nickname = user.getNickname();
 
@@ -170,7 +158,6 @@ public class BoardController {
 
         return "board/boardDeatailed";
 
-//        return boardDetailedDto;
     }
 
 
@@ -285,12 +272,10 @@ public class BoardController {
         }
 
         BoardDetailedDto board1 = boardService.findBoardOnCount(boardId);
-//        List<File> files = board1.getFiles();
 
         BoardEditForm boardEditForm = BoardEditForm.createBoardEditForm(board1);
 
         model.addAttribute("board", boardEditForm);
-//        model.addAttribute("orFiles", files);
 
         return "board/boardEditForm";
 
@@ -365,113 +350,5 @@ public class BoardController {
 
         return ip;
     }
-
-    //    @GetMapping("/boards/{boardId}")
-//    public String getBoard(@PathVariable("boardId") Long boardId, Model model,
-//        @ModelAttribute("commentDto")
-//        CommentDto commentForm, HttpServletResponse resp, HttpServletRequest req,
-//        @AuthenticationPrincipal User user) {
-//
-//
-//
-//        // 삭제된보드에 접근할때 , 리다이렉트.
-//        if (deleteStatus(boardId)) {
-//            return "redirect:/boards/ALL/category";
-//        }
-//
-//        List<BoardCommentDto> commentDto = commentService.findByBoardIdV2(boardId);
-//
-//        Cookie oldCookie = null;
-//
-//        Cookie[] cookies = req.getCookies();
-//        if (cookies != null) {
-//            for (Cookie cookie : cookies) {
-//                if (cookie.getName().equals("visitCount")) {
-//                    System.out.println("visitCount 존재");
-//                    oldCookie = cookie;
-//                }
-//            }
-//        }
-//
-//        if (oldCookie != null) {
-//            if (!oldCookie.getValue().contains("[" + boardId.toString() + "]")) {
-//                boardService.countUp(boardId);
-//                oldCookie.setValue(oldCookie.getValue() + "[" + boardId + "]");
-//                oldCookie.setPath("/");
-//                oldCookie.setMaxAge(60 * 60 * 24);
-//                resp.addCookie(oldCookie);
-//            }
-//        } else {
-//            System.out.println("조회수증가");
-//            boardService.countUp(boardId);
-//            Cookie newCookie = new Cookie("visitCount", "[" + boardId + "]");
-//            newCookie.setPath("/");
-//            newCookie.setMaxAge(60 * 60 * 24);
-//            resp.addCookie(newCookie);
-//        }
-//
-//        BoardDetailedDto boardDetailedDto = boardService.findBoardOnCount(boardId, commentDto);
-//
-////        Long comments = commentService.totalComments(boardId); 쿼리조회를 포뮬러로
-//
-//        String nickname = user.getNickname();
-//        model.addAttribute("nickName", nickname);
-////        model.addAttribute("comments", comments);
-//        model.addAttribute("board", boardDetailedDto);
-//
-//        return "board/boardDeatailed";
-//
-////        return boardDetailedDto;
-//    }
-
-//
-//    //    @GetMapping("/boards")
-//    public String BoardMainBySearch(@ModelAttribute("boardSearch") BoardSearch boardSearch,
-//        Model model,
-//        @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable
-//    ) {
-//
-//        // 보드서치 그대로 갖고 , 다시 던져준다음에 페이지리스트에 갖고있도록 설정
-//
-//
-//        Page<BoardListDto> pages = boardService.getBoardList(boardSearch, pageable);
-//
-//
-//        int nowPage = pages.getPageable().getPageNumber() + 1;
-//        int startPage = Math.max(nowPage - 4, 1);
-//        int endPage = Math.min(nowPage + 9, pages.getTotalPages());
-//
-//        model.addAttribute("pageList", pages);
-//        model.addAttribute("nowPage", nowPage);
-////        model.addAttribute("startPage", startPage);
-////        model.addAttribute("endPage", endPage);
-//
-//        return "board/boardList";
-//
-//
-//    }
-//
-//
-//    //    @GetMapping("/boards/{categoryCode}/category")
-//    public String boardByCondition(Model model, @PathVariable String categoryCode,
-//        @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC)
-//        Pageable pageable) {
-//        Page<BoardListDto> pages = boardService.getPagesByCondition(pageable, categoryCode);
-////        setTotalComments(pages);
-//
-//        int nowPage = pages.getPageable().getPageNumber() + 1;
-//        int startPage = Math.max(nowPage - 4, 1);
-//        int endPage = Math.min(nowPage + 9, pages.getTotalPages());
-//
-//        model.addAttribute("pageList", pages);
-//        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-//
-////        return pages;
-//        return "board/boardList";
-//    }
-//
-
 
 }

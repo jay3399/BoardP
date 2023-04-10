@@ -1,28 +1,21 @@
 package Jay.BoardP.controller;
-
-
 import static org.springframework.util.StringUtils.hasText;
-
 import Jay.BoardP.controller.dto.MemberFormDto;
 import Jay.BoardP.controller.dto.User;
 import Jay.BoardP.domain.Member;
 import Jay.BoardP.service.EmailService;
 import Jay.BoardP.service.memberService;
-import java.time.Duration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +33,7 @@ public class MemberController {
 
 
     @GetMapping("/signUp")
-    public String addForm(@ModelAttribute("memberFormDto") MemberFormDto memberFormDto, Model model
+    public String addForm(@ModelAttribute("memberFormDto") MemberFormDto memberFormDto
     ) {
         return "members/createMemberform";
     }
@@ -48,10 +41,8 @@ public class MemberController {
 
     @PostMapping("/signUp")
     public String addMember(@Validated @ModelAttribute("memberFormDto") MemberFormDto memberFormDto,
-        BindingResult bindingResult, HttpServletRequest request) {
+        BindingResult bindingResult) {
 
-//        HttpSession session1 = request.getSession();
-//        String code = (String) session1.getAttribute("email");
 
         String code = String.valueOf(redisTemplate.opsForValue().get(memberFormDto.getEmail()));
 
@@ -72,10 +63,6 @@ public class MemberController {
         memberService.save(memberFormDto);
 
         makeUpdateCount();
-//
-//        HttpSession session = request.getSession();
-//        session.invalidate();
-
         redisTemplate.delete(memberFormDto.getEmail());
 
         return "redirect:/";
@@ -89,11 +76,6 @@ public class MemberController {
     @PostMapping("/release")
     public String validateHuman(@RequestParam String password,
         RedirectAttributes redirectAttributes, @AuthenticationPrincipal User user) {
-//
-//        if (!hasText(password)) {
-//            redirectAttributes.addAttribute("empty", "비밀번호가 비어있습니다");
-//            return "redirect:/members/{id}/validate";
-//        }
 
         if (isValidatedHuman(user.getId(), password) || !hasText(password)) {
             redirectAttributes.addAttribute("mismatch", "비밀번호가 일치하지않습니다");

@@ -1,5 +1,4 @@
 package Jay.BoardP;
-
 import Jay.BoardP.controller.dto.Role;
 import Jay.BoardP.domain.Board;
 import Jay.BoardP.domain.CountPerDay;
@@ -10,7 +9,6 @@ import Jay.BoardP.repository.CountPerDayRepository;
 import Jay.BoardP.repository.CountPerMonthRepository;
 import Jay.BoardP.repository.SpringDataCountRepository;
 import Jay.BoardP.repository.SpringDataTotalVisitRepository;
-import java.security.SecurityPermission;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -64,14 +62,12 @@ public class BatchConfig {
                 stepForCountPerMonth()).build();
     }
 
-    //    @Bean
     public Step stepForHumanOnMember() {
         return stepBuilderFactory.get("stepForHumanOnMember").<Member, Member>chunk(10)
             .reader(jpaCursorItemReader()).processor(chunkProcessor()).writer(jpaCursorItemWriter())
             .build();
     }
 
-    //    @Bean
     public Step stepForHumanOnBoard() {
         return stepBuilderFactory.get("stepForHumanOnBoard").<Board, Board>chunk(10)
             .reader(jpaCursorItemReader3()).processor(chunkProcessor2())
@@ -79,8 +75,6 @@ public class BatchConfig {
             .build();
     }
 
-
-    //    @Bean
     public Step stepForPenalty() {
         return stepBuilderFactory.get("stepForPenalty").<Board, Board>chunk(10)
             .reader(jpaCursorItemReader2()).processor(chunkProcessor2())
@@ -88,15 +82,7 @@ public class BatchConfig {
     }
 
 
-    public Step stepForTotalCount() {
-        return stepBuilderFactory.get("stepForTotalCount").<TotalVisit, TotalVisit>chunk(1)
-            .reader(jpaCursorItemReader5()).processor(chunkProcessor5())
-            .writer(jpaCursorItemWriter4()).build();
-    }
-
-
     // 휴먼회원 , 로그인 일자로부터 60일 지난게시글 read
-//    @Bean
     public JpaCursorItemReader<Member> jpaCursorItemReader() {
 
         Map<String, Object> param = new HashMap<>();
@@ -114,7 +100,6 @@ public class BatchConfig {
     }
 
     //마지막 업데이트일로부터 60일 지난 게시글 read
-//    @Bean
     public JpaCursorItemReader<Board> jpaCursorItemReader3() {
 
         Map<String, Object> param = new HashMap<>();
@@ -132,7 +117,6 @@ public class BatchConfig {
     }
 
     //신고누적 게시판
-//    @Bean
     public JpaCursorItemReader<Board> jpaCursorItemReader2() {
 
         return new JpaCursorItemReaderBuilder<Board>()
@@ -142,32 +126,7 @@ public class BatchConfig {
             .build();
     }
 
-    public JpaCursorItemReader<TotalVisit> jpaCursorItemReader5() {
-
-        return new JpaCursorItemReaderBuilder<TotalVisit>()
-            .name("jpaCursorItemReader4")
-            .entityManagerFactory(entityManagerFactory)
-            .queryString("SELECT t FROM TotalVisit t")
-            .build();
-    }
-
-    //월별 데이터 집계 , 일별데이터 모두 select
-
-    //    @Bean
-    public JpaCursorItemReader<CountPerDay> jpaCursorItemReader4() {
-
-        //달의 첫날부터  시작되는시점인 마지막날 11시59분까지 의 데이터를 셀렉트
-
-        return new JpaCursorItemReaderBuilder<CountPerDay>()
-            .name("jpaCursorItemReader4")
-            .entityManagerFactory(entityManagerFactory)
-            .queryString("SELECT c FROM CountPerDay c where b.modifiedDate < :date")
-            .build();
-    }
-
-
     // 휴먼회원 전환
-//    @Bean
     public ItemProcessor<Member, Member> chunkProcessor() {
         return m -> {
             m.setRole(Role.HUMAN);
@@ -177,7 +136,6 @@ public class BatchConfig {
 
 
     // 신고누적 및 오래된 게시판 정리
-//    @Bean
     public ItemProcessor<Board, Board> chunkProcessor2() {
         return b -> {
             b.setIsDeleted(true);
@@ -185,20 +143,7 @@ public class BatchConfig {
         };
     }
 
-    public ItemProcessor<TotalVisit, TotalVisit> chunkProcessor5() {
 
-        Long visitCountPerDay = Long.parseLong(
-            String.valueOf(redisTemplate.opsForValue().get("VisitCountPerDay")));
-
-        return b -> {
-            Long count = b.getCount();
-            b.setId(count + visitCountPerDay);
-            return b;
-        };
-    }
-
-
-    //    @Bean
     public ItemWriter<Member> jpaCursorItemWriter() {
         return new JpaItemWriterBuilder<Member>().entityManagerFactory(entityManagerFactory)
             .build();
@@ -210,20 +155,7 @@ public class BatchConfig {
             .build();
     }
 
-    //    @Bean
-    public ItemWriter<CountPerMonth> jpaCursorItemWriter3() {
-        return new JpaItemWriterBuilder<CountPerMonth>().entityManagerFactory(entityManagerFactory)
-            .build();
-    }
-
-    public ItemWriter<TotalVisit> jpaCursorItemWriter4() {
-        return new JpaItemWriterBuilder<TotalVisit>().entityManagerFactory(entityManagerFactory)
-            .build();
-    }
-
-
     //일일데이터
-//    @Bean
     public Step stepForCountPerDay() {
         return stepBuilderFactory.get("stepForCountPerDay")
             .tasklet(
@@ -300,7 +232,6 @@ public class BatchConfig {
     }
 
 
-    //    @Bean
     public Step stepForCountPerMonth() {
         return stepBuilderFactory.get("stepForCountPerMonth")
             .tasklet(

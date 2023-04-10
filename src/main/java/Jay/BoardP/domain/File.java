@@ -37,10 +37,6 @@ public class File  {
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-//    }
-
-
     @Builder
     public File(Long id, String originalFilename, String storedPath, FileType fileType,
         Board board) {
@@ -60,15 +56,6 @@ public class File  {
         this.storedFilename = storedPath;
         this.fileType = fileType;
         this.board = board;
-    }
-
-
-    public static File createFile(
-        Long id, String originalFilename, String storedPath, FileType fileType, Board board
-    ) {
-        File file = new File();
-        file.setFile(id, originalFilename, storedPath, fileType, board);
-        return file;
     }
 
 

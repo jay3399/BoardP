@@ -103,10 +103,6 @@ public class AdminController {
     public String deleteBoard(@RequestParam List<Long> boardIdList) {
 
         for (Long aLong : boardIdList) {
-            System.out.println("aLong = " + aLong);
-        }
-
-        for (Long aLong : boardIdList) {
             repository.deleteById(aLong);
         }
 
@@ -141,7 +137,6 @@ public class AdminController {
         sortValues.add(new SortValue("countOfPenalties", "신고수"));
         sortValues.add(new SortValue("countOfLikes", "좋아요수"));
         sortValues.add(new SortValue("countOfComments", "댓글수"));
-//        sortValues.add(new SortValue("CC", "댓글수"));
 
         return sortValues;
     }

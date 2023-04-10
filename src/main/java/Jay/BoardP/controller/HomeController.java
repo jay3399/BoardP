@@ -10,7 +10,6 @@ import Jay.BoardP.service.EmailService;
 import Jay.BoardP.service.memberService;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -41,25 +39,6 @@ public class HomeController {
     private final EmailService emailService;
 
 
-    //    @GetMapping("/loginHome")
-    public String homeLoginV1(HttpServletRequest request, Model model) {
-
-        HttpSession session = request.getSession(false);
-
-        if (session == null) {
-            return "home";
-        }
-
-        Member member =(Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
-
-        if ( member == null ) {
-            return "home";
-        }
-
-        model.addAttribute("member", member);
-        return "loginHome";
-    }
-
     @GetMapping("/")
     public String homeLoginV2(HttpServletRequest request,
         Model model) {
@@ -74,7 +53,7 @@ public class HomeController {
 
 
         model.addAttribute("visitPerDay", redisTemplate.opsForValue().get("VisitCountPerDay"));
-        model.addAttribute("totalVisit", repository.findById(1L).get().getCount());
+//        model.addAttribute("totalVisit", repository.findById(1L).get().getCount());
 
         return "homeV2";
     }
@@ -174,21 +153,6 @@ public class HomeController {
             redisTemplate.opsForValue().increment("VisitCountPerDay");
         }
     }
-
-
-
-
-    //    @GetMapping("/")
-    public String homeLoginV2(
-        @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
-        Model model) {
-        if (loginMember == null) {
-            return "home";
-        }
-
-        model.addAttribute("member", loginMember);
-        return "home";
-    }
     public boolean isFirstRequest(String clientAddress) {
         String key = getKey(clientAddress);
         return !redisTemplate.hasKey(key);
@@ -198,11 +162,6 @@ public class HomeController {
 
         redisTemplate.opsForValue().set(key, clientAddress); // 데이터집계 순간에 모두 딜리트 .
         redisTemplate.expire(key, 1L, TimeUnit.DAYS);
-//        redisTemplate.expire(key, 1L, TimeUnit.DAYS);
-        //
-
-
-
     }
 
     private static String getKey(String clientAddress) {
@@ -233,26 +192,6 @@ public class HomeController {
 
         return ip;
     }
-
-
-
-
-
 }
 
 
-//
-//        if (session == null) {
-//            return "homeV2";
-//        }
-//
-//        Member member =(Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
-//
-//        if ( member == null ) {
-//            return "homeV2";
-//        }
-//        model.addAttribute("member", member);
-//        Long visitCount = redisService.getVisitCount();
-//        System.out.println("visitCount = " + visitCount);
-//
-//        model.addAttribute("count", redisService.getVisitCount());

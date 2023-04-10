@@ -19,8 +19,6 @@ public class EmailService {
     private final RedisTemplate redisTemplate;
 
 
-
-
     @Async("async")
     public void mailCheck(String email) {
 

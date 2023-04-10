@@ -50,14 +50,6 @@ public class RedisConfig extends CachingConfigurerSupport {
 
         @Bean
     public CacheManager cacheManager() {
-//        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager
-//            .RedisCacheManagerBuilder
-//            .fromConnectionFactory(connectionFactory());
-//        RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
-//            .entryTtl(Duration.ofHours(timeout));
-//        builder.cacheDefaults(configuration);
-//        return builder.build();
-
         RedisCacheConfiguration configuration = RedisCacheConfiguration
             .defaultCacheConfig()
             .disableCachingNullValues()
@@ -78,7 +70,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public CacheManager cacheManagerV3() {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//            .entryTtl(Duration.ofSeconds(30))
             .serializeKeysWith(RedisSerializationContext
                 .SerializationPair
                 .fromSerializer(new StringRedisSerializer()))
@@ -87,14 +78,10 @@ public class RedisConfig extends CachingConfigurerSupport {
                 .fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> cacheConfiguration = new HashMap<>();
-//        cacheConfiguration.put( "board", redisCacheConfiguration.entryTtl(Duration.ofSeconds(30)));
 
         cacheConfiguration.put("board", redisCacheConfiguration.entryTtl(Duration.ofSeconds(180)));
         cacheConfiguration.put("comment", redisCacheConfiguration.entryTtl(Duration.ofSeconds(180)));
         cacheConfiguration.put("file", redisCacheConfiguration.entryTtl(Duration.ofSeconds(180)));
-
-
-
 
 
         return RedisCacheManager
@@ -107,66 +94,3 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 
 }
-
-
-
-//    @Bean
-//    public CacheManager userCacheManager() {
-//        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-//            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-//            .entryTtl(Duration.ofMinutes(3L));
-//
-//        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory()).cacheDefaults(redisCacheConfiguration).build();
-//    }
-//
-//
-//
-//    @Bean
-//    public CacheManager userCacheManager() {
-//        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(connectionFactory());
-//        RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
-//            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())) // Value Serializer 변경
-//            .entryTtl(Duration.ofMinutes(30)); // 캐시 수명 30분
-//        builder.cacheDefaults(configuration);
-//        return builder.build();
-//    }
-
-//
-//    @Bean
-//    public RedisTemplate<?, ?> redisTemplateV2() {
-//        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//        redisTemplate.setConnectionFactory(connectionFactory());
-//        return redisTemplate;
-//    }
-
-//
-////    @Bean
-//    public JedisConnectionFactory connectionFactory() {
-//        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-//        jedisConnectionFactory.setHostName(redisHost);
-//        jedisConnectionFactory.setPort(redisPort);
-//        jedisConnectionFactory.setUsePool(true);
-//        return jedisConnectionFactory;
-//    }
-
-//    @Bean
-//    public LettuceConnectionFactory lettuceConnectionFactory() {
-//        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
-//            .commandTimeout(Duration.ofMinutes(1))
-//            .shutdownTimeout(Duration.ZERO)
-//            .build();
-//        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
-//        return new LettuceConnectionFactory(redisStandaloneConfiguration, lettuceClientConfiguration);
-//    }
-
-
-//    @Bean
-//    public RedisTemplate<?, ?> redisTemplate() {
-//        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(connectionFactory() );
-//        return redisTemplate;
-//    }
-

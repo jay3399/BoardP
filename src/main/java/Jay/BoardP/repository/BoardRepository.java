@@ -12,7 +12,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -225,62 +224,8 @@ public class BoardRepository {
     }
 
 
-    //    @Query("select distinct b from Board b join fetch b.member")
-    public List<Board> test() {
-//        List<Board> fetch1 = jpaQueryFactory.selectFrom(board).leftJoin(board.member, QMember.member).fetchJoin().fetch();
-
-        return em.createQuery(
-                "select distinct b from Board b join fetch b.member", Board.class)
-            .getResultList();
-
-    }
 }
 
-
-
-//    public Page<Board> findBySearch(BoardSearch boardSearch , Pageable pageable) {
-//
-//        String title = boardSearch.getTitle();
-//        String content = boardSearch.getContent();
-//        String complex = boardSearch.getComplex();
-//
-//        BooleanBuilder builder = new BooleanBuilder();
-//
-//        if (StringUtils.hasText(title)) {
-//            builder.and(board.title.like("%" + title + "%"));
-//        }
-//
-//        if (StringUtils.hasText(content)) {
-//            builder.and(board.content.like("%" + content + "%"));
-//        }
-//
-//        Page<Board> all = adBoardRepository.findAll(builder, pageable);
-//
-//
-//        if (StringUtils.hasText(complex)) {
-//            builder.and(board.title.like("%" + complex + "%")).and(
-//                board.content.like("%" + complex + "%")
-//            );
-//        }
-//
-//        List<Board> fetch = jpaQueryFactory.selectFrom(board).where(builder)
-//            .orderBy(board.id.desc()).offset(
-//                pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-//
-//        JPAQuery<Board> where = jpaQueryFactory.selectFrom(board).where(builder);
-//
-//        return PageableExecutionUtils.getPage(fetch, pageable, where::fetchCount);
-//
-//        QueryResults<Board> boardQueryResults = jpaQueryFactory.selectFrom(board).where(builder)
-//            .orderBy(board.id.desc()).offset(
-//                pageable.getOffset()).limit(pageable.getPageSize()).fetchResults();
-//
-//        List<Board> results = boardQueryResults.getResults();
-//        long total = boardQueryResults.getTotal();
-//
-//        return new PageImpl<>(results, pageable, total);
-//
-//    }
 
 
 

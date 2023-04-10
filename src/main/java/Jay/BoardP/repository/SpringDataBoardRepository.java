@@ -20,16 +20,14 @@ public interface SpringDataBoardRepository extends JpaRepository<Board, Long> ,
 
 
 
-    //리스트는 절대 null이 아니다 ,만약 값이 없다면 빈 컬렉션이 반환될뿐
-    //<->단건조회는 , 없으면 결과가 null이출력
     List<Board> findAllByMember_Id(Long memberId);
 
 
     //EntityGraph == fetchJoin
-    //한번에 가져오지않고 , 조회할때마다 쿼리를 날린다 !!!!!!!
+    //한번에 가져오지않고 , 조회할때마다 쿼리를 날린다
     //n+1 문제 해결
 
-    //pageable && native query 함께써도 전혀 문제없다 @@@@@
+    //pageable && native query 함께써도 전혀 문제없다
     //메서드 이름또한 바꿔도 상관없다 , 하지만 아래는 이름규칙을따라서 마음대로 바꾸면 안된다 .
     @EntityGraph(attributePaths = {"category", "files"})
     @Query(
@@ -40,12 +38,10 @@ public interface SpringDataBoardRepository extends JpaRepository<Board, Long> ,
     @EntityGraph(attributePaths = {"category", "files"})
     Page<Board> findAll(Predicate predicate, Pageable pageable);
 
-    //아우터조인 가능하고 , 컬렉션가져와도 뻥튀기 오류가 안뜬다 .. ?
+    //아우터조인 가능하고 , 컬렉션가져와도 뻥튀기 오류가 안뜬다.
     //페치조인은 '둘이상' 의 컬랙션을 가져오면 안된다  -> 컬렉션은 무조건 1개! , 엔티티는 상관이없다 .
     //하지만 , 페이징api에서는 일대다는 데이터뻥튀기문제떄문에 경고가 난다 , 위 참고
     //em.find n+1이슈 -> 패치조인해결
-
-
     //일대다 두개 페치조인상태 -> 위험하다  , -> 분리한다 .
     @Query("select b from Board b join fetch b.category left join fetch b.files where b.id = :id")
     Board findBoard(@Param("id") Long id);
@@ -54,7 +50,6 @@ public interface SpringDataBoardRepository extends JpaRepository<Board, Long> ,
     List<Board> findByIsDeletedAndModifiedDateLessThan(Boolean isDeleted,
         LocalDateTime modifiedDate);
 
-    List<Board> findByIsDeleted(Boolean isDeleted);
 
     void deleteAllByIsDeleted(Boolean isDeleted);
 

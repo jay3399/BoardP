@@ -73,48 +73,6 @@ public class CommentLikeService {
         return true;
     }
 
-//    public Boolean pushLikeButton(CommentLikeDto commentLikeDto) {
-//
-//
-//        commentLikeRepository.exist(commentLikeDto.getMember().getId(),
-//            commentLikeDto.getBoardComment()
-//                .getId()).ifPresentOrElse(
-//            (commentLike) -> {
-//                repository.deleteById(commentLike.getId());
-//                commentLike.removeComment(commentLikeDto.getBoardComment(),
-//                    commentLikeDto.getMember());
-//            },
-//            () -> {
-//                BoardComment comment = getComment(commentLikeDto);
-//                CommentLike commentLike = CommentLike.createCommentLike(
-//                    comment,
-//                    commentLikeDto.getMember());
-//                repository.save(commentLike);
-//            });
-//        return true;
-//    }
-
-//    public Boolean pushDisLikeButton(CommentDisLikeDto commentDisLikeDto) {
-//        commentDisLikeRepository.exist(commentDisLikeDto.getMember().getId(),
-//            commentDisLikeDto.getBoardComment()
-//                .getId()).ifPresentOrElse(
-//            commentDisLike -> {
-//                repository.deleteById(commentDisLike.getId());
-//                commentDisLike.removeComments(commentDisLikeDto.getBoardComment(),
-//                    commentDisLikeDto.getMember());
-//            }
-//            ,
-//            () -> {
-//                BoardComment comment = getComment(commentDisLikeDto);
-//                CommentDisLike commentDisLike = CommentDisLike.createCommentDisLike(comment,
-//                    commentDisLikeDto.getMember());
-//                postDisLikeRepository.save(commentDisLike);
-//            }
-//
-//        );
-//        return true;
-//    }
-
 
     public BoardComment getComment(CommentLikeDto commentLikeDto) {
         return repository.findComment(commentLikeDto.getBoardComment().getId());

@@ -46,14 +46,6 @@ public class Penalty extends TimeEntity {
         member.getPenaltyList().add(this);
     }
 
-//    public void setV2(Board board, Member member
-//    ) {
-//        this.board = board;
-//        this.member = member;
-//        board.getPenalties().add(this);
-//        member.getPenaltyList().add(this);
-//    }
-
     public static Penalty createPenalty(Board board ,Member member , PenaltyForm penaltyForm) {
         Penalty penalty = new Penalty();
         penalty.set(board, member, penaltyForm);

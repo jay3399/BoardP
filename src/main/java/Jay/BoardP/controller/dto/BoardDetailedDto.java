@@ -1,5 +1,4 @@
 package Jay.BoardP.controller.dto;
-
 import Jay.BoardP.domain.Board;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -8,9 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardDetailedDto{
 
     private Long id;
@@ -37,20 +39,11 @@ public class BoardDetailedDto{
 
     private List<BoardCommentDto> comments = new ArrayList<>();
 
-    private BoardDetailedDto() {
-
-    }
-
-    public void setComments(List<BoardCommentDto> boardCommentDto) {
-        this.comments = boardCommentDto;
-    }
-
     public void setBoardDetailed(Board board) {
         this.id = board.getId();
         this.nickName = board.getCreateBy();
         this.title = board.getTitle();
         this.content = board.getContent();
-//        this.countVisit = viewCount;
         this.createDate = board.getCreatedDate();
         this.postLike = Long.valueOf(board.getCountOfLikes());
         this.commentsSize = Long.valueOf(board.getCountOfComments());
@@ -60,10 +53,6 @@ public class BoardDetailedDto{
             (board.getCategory().getCode().equals("QNA")) ? "질문" :
                 (board.getCategory().getCode().equals("FUN")) ? "유머" :
                     (board.getCategory().getCode().equals("NOTICE")) ? "공지사항" : null;
-
-
-
-
     }
 
 

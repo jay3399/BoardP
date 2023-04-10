@@ -27,9 +27,6 @@ public class Category {
 
     private String code;
 
-
-    //@@ 이상하다 ? Many to one 쪽에 전파가 걸리는게 흐름상 맞다 나중에수정
-
     @OneToMany(mappedBy = "category" , cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
 

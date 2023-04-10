@@ -8,18 +8,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardAddForm {
-
-
-    //validate이용시에는 form전달객체이용후
-    //전달객체 -> DTO변환
 
 
     @NotBlank(message = "제목을 입력해주세요.")
@@ -56,10 +53,6 @@ public class BoardAddForm {
             .build();
     }
 
-//    public static BoardPostDto createBoardPostDto(Member member) {
-//        Map<FileType, List<MultipartFile>> files = getAttachmentTypeListMap();
-//        return BoardPostDto.createBoardPostDto(member.getNickname(), , builder().content, files);
-//    }
 
     private Map<FileType, List<MultipartFile>> getAttachmentTypeListMap() {
         Map<FileType, List<MultipartFile>> attachments = new ConcurrentHashMap<>();

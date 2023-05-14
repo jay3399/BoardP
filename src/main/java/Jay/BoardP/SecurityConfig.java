@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .and()
 //                .oauth2Login().loginPage("login")
                 .csrf().disable()
+
                 .sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)

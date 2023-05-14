@@ -27,18 +27,21 @@ public class BoardPostDto {
 
     private String categoryCode;
 
+    private Long userId;
+
 
     private Map<FileType, List<MultipartFile>> attachmentFiles = new ConcurrentHashMap<>();
 
     @Builder
     public BoardPostDto(String nickName, String title, String content,
-        Map<FileType, List<MultipartFile>> attachmentFiles , String ipAddress , String categoryCode) {
+        Map<FileType, List<MultipartFile>> attachmentFiles , String ipAddress , String categoryCode , Long userId) {
         this.nickName = nickName;
         this.title = title;
         this.attachmentFiles = attachmentFiles;
         this.ipAddress = ipAddress;
         this.content = content;
         this.categoryCode = categoryCode;
+        this.userId = userId;
     }
 
 

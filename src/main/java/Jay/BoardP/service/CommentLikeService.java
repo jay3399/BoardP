@@ -13,6 +13,8 @@ import Jay.BoardP.repository.CommentRepositoryRepository;
 import Jay.BoardP.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +31,17 @@ public class CommentLikeService {
     private final MemberRepository memberRepository;
 
 
+
     @CacheEvict(value = "comment", key = "#boardId")
     public Boolean pushLikeButton(Long memberId, Long commentId, Long boardId) {
+
+
 
         Member member = memberRepository.findMember(memberId);
         BoardComment boardComment = repository.findComment(commentId);
 
-        commentLikeRepository.exist(member.getId(),
-            boardComment.getId()).ifPresentOrElse(
-            (commentLike) -> {
+        commentLikeRepository.exist(member.getId(), boardComment.getId())
+            .ifPresentOrElse((commentLike) -> {
                 commentLikeRepository.deleteById(commentLike.getId());
                 commentLike.removeComment(boardComment,
                     member);
@@ -53,6 +57,8 @@ public class CommentLikeService {
 
 
     public Boolean pushDisLikeButton(Long memberId, Long commentId) {
+
+
 
         Member member = memberRepository.findMember(memberId);
         BoardComment boardComment = repository.findComment(commentId);

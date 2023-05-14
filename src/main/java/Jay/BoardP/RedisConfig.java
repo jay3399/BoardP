@@ -48,7 +48,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         return redisTemplate;
     }
 
-        @Bean
+    @Bean
     public CacheManager cacheManager() {
         RedisCacheConfiguration configuration = RedisCacheConfiguration
             .defaultCacheConfig()

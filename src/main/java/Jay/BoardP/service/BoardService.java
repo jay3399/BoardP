@@ -59,6 +59,22 @@ public class BoardService {
         return boardRepository.saveBoardV2(board);
     }
 
+    @Transactional
+    public Long addBoardV3(BoardPostDto boardPostDto) throws IOException {
+
+        Member member = memberRepository.findMember(boardPostDto.getUserId());
+
+        Board board = boardPostDto.createBoard(member);
+
+        List<File> files = fileService.saveFiles(boardPostDto.getAttachmentFiles() ,board);
+
+        for (File file : files) {
+            log.info(file.getOriginalFilename());
+        }
+
+        return boardRepository.saveBoardV2(board);
+    }
+
     public Board findBoard(Long boardId) {
         return boardRepository.findBoard(boardId);
     }

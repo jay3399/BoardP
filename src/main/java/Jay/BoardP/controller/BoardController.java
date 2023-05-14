@@ -165,15 +165,31 @@ public class BoardController {
         return boardService.deleteValidated(boardId);
     }
 
+//    @GetMapping("/boards/post")
+//    public String boardForm(@ModelAttribute("boardForm") BoardAddForm boardAddForm) {
+//        return "board/boardForm";
+//    }
+
     @GetMapping("/boards/post")
-    public String boardForm(@ModelAttribute("boardForm") BoardAddForm boardAddForm) {
+    public String boardForm(@ModelAttribute("boardForm") BoardAddForm boardAddForm,
+        @AuthenticationPrincipal User user , HttpServletRequest request) {
+
+        String nickname = user.getNickname();
+        String ipAddress = getIpAddress(request);
+        Long id = user.getId();
+
+        request.setAttribute("nickname", nickname);
+        request.setAttribute("id", id);
+        request.setAttribute("ipAddress", ipAddress);
+
+
         return "board/boardForm";
     }
 
+
     @PostMapping("/boards/post")
     public String addBoard(@Validated @ModelAttribute("boardForm") BoardAddForm boardAddForm,
-        BindingResult bindingResult, @AuthenticationPrincipal User user,
-        RedirectAttributes redirectAttributes, HttpServletRequest req) throws IOException {
+        BindingResult bindingResult, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) throws IOException {
 
         if (bindingResult.hasErrors()) {
             log.info("bindingResult :{}", bindingResult);
@@ -188,14 +204,13 @@ public class BoardController {
         }
 
 
+//        String ipAddress = getIpAddress(req);
 
-        String ipAddress = getIpAddress(req);
+        BoardPostDto boardPostDto = boardAddForm.createBoardPostDto();
 
-        BoardPostDto boardPostDto = boardAddForm.createBoardPostDto(user.getNickname(), ipAddress);
+//        Long boardId = boardService.addBoardV2(user.getId(), boardPostDto);
 
-        Long boardId = boardService.addBoardV2(user.getId(), boardPostDto);
-
-
+        Long boardId = boardService.addBoardV3(boardPostDto);
 
         makeUpdateCount("boardPerDay");
 

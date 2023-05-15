@@ -32,6 +32,33 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
 
+    @Caching(evict = {
+        @CacheEvict(value = "board", key = "#boardId"),
+        @CacheEvict(value = "comment", key = "#boardId")}
+    )
+    @Transactional
+    public Long addCommentV2(CommentDto commentDto) {
+
+        Member member = memberService.findOne(commentDto.getMemberId());
+        Board board = boardRepository.findBoard(commentDto.getBoardId());
+        String content = commentDto.getContent();
+
+        if (commentDto.getParentId() == null) {
+
+            BoardComment comment = BoardComment.createComment(board, member, content);
+
+            repository.save(comment);
+
+            return comment.getId();
+        }
+
+        BoardComment parent = findOne(commentDto.getParentId());
+        BoardComment comment = BoardComment.createComment(board, member, content, parent);
+
+        repository.save(comment);
+        return comment.getId();
+    }
+
 //    @Caching(evict = {
 //        @CacheEvict(value = "board", key = "#boardId"),
 //        @CacheEvict(value = "comment", key = "#boardId")}
@@ -72,33 +99,6 @@ public class CommentService {
 //
 //    }
 
-
-    @Caching(evict = {
-        @CacheEvict(value = "board", key = "#boardId"),
-        @CacheEvict(value = "comment", key = "#boardId")}
-    )
-    @Transactional
-    public Long addCommentV2(CommentDto commentDto) {
-
-        Member member = memberService.findOne(commentDto.getMemberId());
-        Board board = boardRepository.findBoard(commentDto.getBoardId());
-        String content = commentDto.getContent();
-
-        if (commentDto.getParentId() == null) {
-
-            BoardComment comment = BoardComment.createComment(board, member, content);
-
-            repository.save(comment);
-
-            return comment.getId();
-        }
-
-        BoardComment parent = findOne(commentDto.getParentId());
-        BoardComment comment = BoardComment.createComment(board, member, content, parent);
-
-        repository.save(comment);
-        return comment.getId();
-    }
 
 
 

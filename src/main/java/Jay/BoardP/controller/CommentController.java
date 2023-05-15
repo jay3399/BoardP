@@ -20,13 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-public class CommentController {;
-,
+public class CommentController {
+
 
     private final CommentLikeService commentLikeService;
     private final CommentService commentService;
 
-//
+
+
+
 //    @PostMapping("/comment/{boardId}/reply")
 //    public String addComment(@PathVariable Long boardId,
 //        @Validated @ModelAttribute("commentDto") CommentDto commentDto
@@ -46,8 +48,6 @@ public class CommentController {;
 //        return "redirect:/boards/{boardId}";
 //    }
 
-
-//
 //    @PostMapping("/comment/{boardId}/{parentId}/reply")
 //    public String addReComment(@PathVariable Long boardId, @PathVariable Long parentId,
 //        String content, @AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
@@ -58,9 +58,10 @@ public class CommentController {;
 //
 //        return "redirect:/boards/{boardId}";
 //    }
+//
+
 
     // form + 서비스단 전송용객체 dto 추가 -> 파라미터 개수 --  , 컨트롤러 의존성 --
-
     @PostMapping("/comment/{boardId}/reply")
     public String addCommentV2(@PathVariable Long boardId,
         @Validated @ModelAttribute("commentForm") CommentForm commentForm
@@ -91,10 +92,15 @@ public class CommentController {;
         CommentDto commentDto = CommentDto.create(content, memberId, boardId, parentId);
 
         commentService.addCommentV2(commentDto);
+
         redirectAttributes.addAttribute("boardId", boardId);
 
         return "redirect:/boards/{boardId}";
     }
+
+
+
+
 
     @PostMapping("/comment/{boardId}/{commentId}/delete")
     public String deleteComment(@PathVariable Long commentId, @PathVariable Long boardId,

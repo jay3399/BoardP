@@ -11,6 +11,7 @@ import Jay.BoardP.controller.dto.CommentDto;
 import Jay.BoardP.controller.dto.FileDto;
 import Jay.BoardP.controller.dto.Role;
 import Jay.BoardP.controller.dto.User;
+import Jay.BoardP.controller.form.CommentForm;
 import Jay.BoardP.controller.form.PenaltyForm;
 import Jay.BoardP.controller.form.BoardEditForm;
 import Jay.BoardP.domain.Board;
@@ -116,8 +117,8 @@ public class BoardController {
 
     @GetMapping("/boards/{boardId}")
     public String getBoardV3WithRedisCount(@PathVariable("boardId") Long boardId, Model model,
-        @ModelAttribute("commentDto")
-        CommentDto commentForm, HttpServletResponse resp, HttpServletRequest req,
+        @ModelAttribute("commentForm")
+        CommentForm commentForm, HttpServletResponse resp, HttpServletRequest req,
         @AuthenticationPrincipal User user) {
 
         if (deleteStatus(boardId)) {
@@ -131,7 +132,6 @@ public class BoardController {
         if (redisService.isFirstRequest(ipAddress, boardId)) {
             boardService.viewCountWithRedisWithFirst(boardId);   // viewCnt
             redisService.writeRequest(ipAddress, boardId);   // 중복방지
-
             makeUpdateCount(key); //일일 전체 보드 카운트수
         }
 
@@ -196,19 +196,18 @@ public class BoardController {
             return "board/boardForm";
         }
 
-
         // 권한 인증 , 오직 어드민만 공지사항작성가능
         // 프론트단에서 막아놔도 , 스크립트상으로 접근가능 -> 컨트롤러에서 한번더 검증
         if (isNotice(boardAddForm, user)) {
             return "redirect:/boards/post";
         }
 
-
-//        String ipAddress = getIpAddress(req);
+        // 컨트롤러단과 , 서비스의 결합을 최대한 느슨하게해야한다
+        // 컨트롤러의 파라미터를 그대로 서비스단으로 넘기면 form객체 , 그러면 컨트롤러단에 의지를 하는것 .
+        // 특히 서비스단은 최대한 순수하게 유지를 해줘야한다  , 의존 최대한 x
+        // 파라미터 개수또한 최대한 제한한다 , 유지보수 관점
 
         BoardPostDto boardPostDto = boardAddForm.createBoardPostDto();
-
-//        Long boardId = boardService.addBoardV2(user.getId(), boardPostDto);
 
         Long boardId = boardService.addBoardV3(boardPostDto);
 
@@ -217,6 +216,10 @@ public class BoardController {
         redirectAttributes.addAttribute("boardId", boardId);
 
         return "redirect:/boards/{boardId}";
+
+        // String ipAddress = getIpAddress(req);
+
+//        Long boardId = boardService.addBoardV2(user.getId(), boardPostDto);
     }
 
     private void makeUpdateCount(String key) {

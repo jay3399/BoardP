@@ -31,44 +31,73 @@ public class CommentService {
     private final memberService memberService;
     private final BoardRepository boardRepository;
 
+
+//    @Caching(evict = {
+//        @CacheEvict(value = "board", key = "#boardId"),
+//        @CacheEvict(value = "comment", key = "#boardId")}
+//    )
+//    @Transactional
+//    public Long addComment(Long memberId, Long boardId, String content, Long parentId) {
+//
+//        Member member = memberService.findOne(memberId);
+//
+//        Board board = boardRepository.findBoard(boardId);
+//
+//        BoardComment parent = findOne(parentId);
+//
+//        BoardComment comment = BoardComment.createComment(board, member, content, parent);
+//
+//        repository.save(comment);
+//
+//        return comment.getId();
+//    }
+//
+//
+//
+//    @Caching(evict = {
+//        @CacheEvict(value = "board", key = "#boardId"),
+//        @CacheEvict(value = "comment", key = "#boardId")}
+//    )
+//    @Transactional
+//    public Long addComment(Long memberId, Long boardId, String content) {
+//
+//        Member member = memberService.findOne(memberId);
+//        Board board = boardRepository.findBoard(boardId);
+//
+//        BoardComment comment = BoardComment.createComment(board, member, content);
+//
+//        repository.save(comment);
+//
+//        return comment.getId();
+//
+//    }
+
+
     @Caching(evict = {
         @CacheEvict(value = "board", key = "#boardId"),
         @CacheEvict(value = "comment", key = "#boardId")}
     )
     @Transactional
-    public Long addComment(Long memberId, Long boardId, String content, Long parentId) {
+    public Long addCommentV2(CommentDto commentDto) {
 
-        Member member = memberService.findOne(memberId);
+        Member member = memberService.findOne(commentDto.getMemberId());
+        Board board = boardRepository.findBoard(commentDto.getBoardId());
+        String content = commentDto.getContent();
 
-        Board board = boardRepository.findBoard(boardId);
+        if (commentDto.getParentId() == null) {
 
-        BoardComment parent = findOne(parentId);
+            BoardComment comment = BoardComment.createComment(board, member, content);
 
+            repository.save(comment);
+
+            return comment.getId();
+        }
+
+        BoardComment parent = findOne(commentDto.getParentId());
         BoardComment comment = BoardComment.createComment(board, member, content, parent);
 
         repository.save(comment);
-
         return comment.getId();
-    }
-
-
-
-    @Caching(evict = {
-        @CacheEvict(value = "board", key = "#boardId"),
-        @CacheEvict(value = "comment", key = "#boardId")}
-    )
-    @Transactional
-    public Long addComment(Long memberId, Long boardId, String content) {
-
-        Member member = memberService.findOne(memberId);
-        Board board = boardRepository.findBoard(boardId);
-
-        BoardComment comment = BoardComment.createComment(board, member, content);
-
-        repository.save(comment);
-
-        return comment.getId();
-
     }
 
 

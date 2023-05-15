@@ -100,7 +100,7 @@
     <div class="card btn-light">
       <div class="card-body">
         <form th:action="@{/comment/{boardId}/reply (boardId=${board.id})}"
-              th:object="${commentDto}"
+              th:object="${commentForm}"
               method="post" sec:authorize="hasAnyRole('ROLE_USER' , 'ROLE_ADMIN')" class="mb-4">
     <textarea type="text" th:field="*{content}" th:errorclass="field-error" class="form-control"
               id="reply1" name="reply1" rows="3"></textarea>

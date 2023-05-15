@@ -20,6 +20,7 @@
 - Jpa , QueryDSL
 - MySQL, Redis
 - ThymeLeaf
+- .
 
 ## 기능
 - 사용자

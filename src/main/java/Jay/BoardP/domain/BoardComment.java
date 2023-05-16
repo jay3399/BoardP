@@ -28,7 +28,6 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardComment extends TimeEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_coment_id")

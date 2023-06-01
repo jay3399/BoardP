@@ -1,5 +1,8 @@
 package Jay.BoardP.controller;
 
+import static Jay.BoardP.controller.Attributes.*;
+import static Jay.BoardP.controller.RedisAttributes.*;
+
 import Jay.BoardP.controller.form.BoardAddForm;
 import Jay.BoardP.controller.dto.BoardCommentDto;
 import Jay.BoardP.controller.dto.BoardDetailedDto;
@@ -126,7 +129,7 @@ public class BoardController {
         }
 
         String ipAddress = getIpAddress(req);
-        String key = "boardCountPerDay";
+        String key = BOARDCOUNTPERDAY;
 
         //2분마다 , 스케줄이용 viewCnt 값을 디비에 반영
         if (redisService.isFirstRequest(ipAddress, boardId)) {
@@ -150,11 +153,11 @@ public class BoardController {
 
         String nickname = user.getNickname();
 
-        model.addAttribute("nickName", nickname);
-        model.addAttribute("board", boardDetailedDto);
-        model.addAttribute("comments", commentDto);
-        model.addAttribute("files", boardsFiles);
-        model.addAttribute("viewCnt", viewCnt);
+        model.addAttribute(NICKNAME, nickname);
+        model.addAttribute(BOARD, boardDetailedDto);
+        model.addAttribute(COMMENTS, commentDto);
+        model.addAttribute(FILES, boardsFiles);
+        model.addAttribute(VIEWCNT, viewCnt);
 
         return "board/boardDeatailed";
 
@@ -165,10 +168,6 @@ public class BoardController {
         return boardService.deleteValidated(boardId);
     }
 
-//    @GetMapping("/boards/post")
-//    public String boardForm(@ModelAttribute("boardForm") BoardAddForm boardAddForm) {
-//        return "board/boardForm";
-//    }
 
     @GetMapping("/boards/post")
     public String boardForm(@ModelAttribute("boardForm") BoardAddForm boardAddForm,
@@ -211,9 +210,9 @@ public class BoardController {
 
         Long boardId = boardService.addBoardV3(boardPostDto);
 
-        makeUpdateCount("boardPerDay");
+        makeUpdateCount(BOARDPERDAY);
 
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
 
         return "redirect:/boards/{boardId}";
 
@@ -283,7 +282,7 @@ public class BoardController {
             board1 -> board1.getCreateBy().equals(board.getCreateBy())
         ).findAny().get();
 
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
 
         if (board2 == null) {
             return "redirect:/boards/{boardId}";
@@ -293,7 +292,7 @@ public class BoardController {
 
         BoardEditForm boardEditForm = BoardEditForm.createBoardEditForm(board1);
 
-        model.addAttribute("board", boardEditForm);
+        model.addAttribute(BOARD, boardEditForm);
 
         return "board/boardEditForm";
 
@@ -312,7 +311,7 @@ public class BoardController {
         }
 
         boardService.editBoard(boardId, boardEditForm);
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
 
         return "redirect:/boards/{boardId}";
 

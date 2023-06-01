@@ -1,5 +1,7 @@
 package Jay.BoardP.controller;
 
+import static Jay.BoardP.controller.RedisAttributes.*;
+
 import Jay.BoardP.domain.Member;
 import Jay.BoardP.repository.MemberRepository;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         member.setLoginDate(LocalDateTime.now());
 
-        makeUpdateCount("signInPerDay");
+        makeUpdateCount(SIGNINPERDAY);
 
         response.sendRedirect("/");
 

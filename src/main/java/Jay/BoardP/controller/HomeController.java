@@ -1,6 +1,7 @@
 package Jay.BoardP.controller;
 
 
+import static Jay.BoardP.controller.RedisAttributes.*;
 import static org.springframework.util.StringUtils.hasText;
 
 import Jay.BoardP.controller.form.ResetPasswordForm;
@@ -52,7 +53,7 @@ public class HomeController {
         }
 
 
-        model.addAttribute("visitPerDay", redisTemplate.opsForValue().get("VisitCountPerDay"));
+        model.addAttribute(VISITCOUNTPERDAY, redisTemplate.opsForValue().get(VISITCOUNTPERDAY));
 //        model.addAttribute("totalVisit", repository.findById(1L).get().getCount());
 
         return "homeV2";
@@ -145,12 +146,12 @@ public class HomeController {
 
     private void makeUpdateCount() {
 
-        if (!redisTemplate.hasKey("VisitCountPerDay")) {
+        if (!redisTemplate.hasKey(VISITCOUNTPERDAY)) {
             ValueOperations valueOperations = redisTemplate.opsForValue();
-            valueOperations.set("VisitCountPerDay", 0L);
-            valueOperations.increment("VisitCountPerDay");
+            valueOperations.set(VISITCOUNTPERDAY, 0L);
+            valueOperations.increment(VISITCOUNTPERDAY);
         } else {
-            redisTemplate.opsForValue().increment("VisitCountPerDay");
+            redisTemplate.opsForValue().increment(VISITCOUNTPERDAY);
         }
     }
     public boolean isFirstRequest(String clientAddress) {

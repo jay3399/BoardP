@@ -1,4 +1,5 @@
 package Jay.BoardP.controller;
+import static Jay.BoardP.controller.RedisAttributes.*;
 import static org.springframework.util.StringUtils.hasText;
 import Jay.BoardP.controller.dto.MemberFormDto;
 import Jay.BoardP.controller.dto.User;
@@ -148,12 +149,12 @@ public class MemberController {
     }
 
     private void makeUpdateCount() {
-        if (!redisTemplate.hasKey("signUpPerDay")) {
+        if (!redisTemplate.hasKey(SIGNUPPERDAY)) {
             ValueOperations valueOperations = redisTemplate.opsForValue();
-            valueOperations.set("signUpPerDay", 0L);
-            valueOperations.increment("signUpPerDay");
+            valueOperations.set(SIGNUPPERDAY, 0L);
+            valueOperations.increment(SIGNUPPERDAY);
         } else {
-            redisTemplate.opsForValue().increment("signUpPerDay");
+            redisTemplate.opsForValue().increment(SIGNUPPERDAY);
         }
 
 

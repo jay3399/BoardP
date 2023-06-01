@@ -1,6 +1,8 @@
 package Jay.BoardP.controller;
 
 
+import static Jay.BoardP.controller.Attributes.BOARDID;
+
 import Jay.BoardP.controller.dto.CommentDto;
 import Jay.BoardP.controller.dto.User;
 import Jay.BoardP.controller.form.CommentForm;
@@ -78,7 +80,7 @@ public class CommentController {
 
         commentService.addCommentV2(commentDto);
 
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
 
         return "redirect:/boards/{boardId}";
     }
@@ -93,7 +95,7 @@ public class CommentController {
 
         commentService.addCommentV2(commentDto);
 
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
 
         return "redirect:/boards/{boardId}";
     }
@@ -106,7 +108,7 @@ public class CommentController {
     public String deleteComment(@PathVariable Long commentId, @PathVariable Long boardId,
         RedirectAttributes redirectAttributes) {
         Boolean aBoolean = commentService.deleteComment(commentId , boardId);
-        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute(BOARDID, boardId);
         return "redirect:/boards/{boardId}";
     }
 

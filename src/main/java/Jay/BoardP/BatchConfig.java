@@ -1,4 +1,8 @@
 package Jay.BoardP;
+import static Jay.BoardP.controller.RedisAttributes.*;
+
+import Jay.BoardP.controller.Attributes;
+import Jay.BoardP.controller.RedisAttributes;
 import Jay.BoardP.controller.dto.Role;
 import Jay.BoardP.domain.Board;
 import Jay.BoardP.domain.CountPerDay;
@@ -167,30 +171,30 @@ public class BatchConfig {
                     Long VisitCountPerDay = 0L;
                     Long signInPerDay = 0L;
 
-                    if (redisTemplate.hasKey("boardPerDay")) {
+                    if (redisTemplate.hasKey(BOARDPERDAY)) {
                         boardPerDay = Long.parseLong(
                             String.valueOf(
-                                redisTemplate.opsForValue().getAndDelete("boardPerDay")));
+                                redisTemplate.opsForValue().getAndDelete(BOARDPERDAY)));
                     }
-                    if (redisTemplate.hasKey("boardCountPerDay")) {
+                    if (redisTemplate.hasKey(BOARDCOUNTPERDAY)) {
                         boardCountPerDay = Long.parseLong(
                             String.valueOf(
-                                redisTemplate.opsForValue().getAndDelete("boardCountPerDay")));
+                                redisTemplate.opsForValue().getAndDelete(BOARDCOUNTPERDAY)));
                     }
-                    if (redisTemplate.hasKey("signUpPerDay")) {
+                    if (redisTemplate.hasKey(SIGNUPPERDAY)) {
                         signUpPerDay = Long.parseLong(
                             String.valueOf(
-                                redisTemplate.opsForValue().getAndDelete("signUpPerDay")));
+                                redisTemplate.opsForValue().getAndDelete(SIGNUPPERDAY)));
                     }
-                    if (redisTemplate.hasKey("VisitCountPerDay")) {
+                    if (redisTemplate.hasKey(VISITCOUNTPERDAY)) {
                         VisitCountPerDay = Long.parseLong(
                             String.valueOf(
-                                redisTemplate.opsForValue().getAndDelete("VisitCountPerDay")));
+                                redisTemplate.opsForValue().getAndDelete(VISITCOUNTPERDAY)));
                     }
-                    if (redisTemplate.hasKey("signInPerDay")) {
+                    if (redisTemplate.hasKey(SIGNINPERDAY)) {
                         signInPerDay = Long.parseLong(
                             String.valueOf(
-                                redisTemplate.opsForValue().getAndDelete("signInPerDay")));
+                                redisTemplate.opsForValue().getAndDelete(SIGNINPERDAY)));
                     }
 
                     CountPerDay countPerDay = CountPerDay.createCountPerDay(VisitCountPerDay,
@@ -211,12 +215,12 @@ public class BatchConfig {
             .tasklet(
                 ((contribution, chunkContext) -> {
 
-                    if (!redisTemplate.hasKey("VisitCountPerDay")) {
+                    if (!redisTemplate.hasKey(VISITCOUNTPERDAY)) {
                         return RepeatStatus.FINISHED;
                     }
 
                     Long visitCountPerDay = Long.parseLong(
-                        String.valueOf(redisTemplate.opsForValue().get("VisitCountPerDay")));
+                        String.valueOf(redisTemplate.opsForValue().get(VISITCOUNTPERDAY)));
 
                     totalVisitRepository.findById(1L).ifPresentOrElse(
                         totalVisit -> {

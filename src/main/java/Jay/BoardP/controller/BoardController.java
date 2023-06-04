@@ -121,14 +121,14 @@ public class BoardController {
     @GetMapping("/boards/{boardId}")
     public String getBoardV3WithRedisCount(@PathVariable("boardId") Long boardId, Model model,
         @ModelAttribute("commentForm")
-        CommentForm commentForm, HttpServletResponse resp, HttpServletRequest req,
-        @AuthenticationPrincipal User user) {
+        CommentForm commentForm,HttpServletRequest req, @AuthenticationPrincipal User user) {
 
         if (deleteStatus(boardId)) {
             return "redirect:/boards/ALL/category";
         }
 
         String ipAddress = getIpAddress(req);
+
         String key = BOARDCOUNTPERDAY;
 
         //2분마다 , 스케줄이용 viewCnt 값을 디비에 반영
@@ -142,8 +142,6 @@ public class BoardController {
         boardService.viewCountWithRedis(boardId);
 
         List<BoardCommentDto> commentDto = commentService.findByBoardIdV2(boardId);
-
-        //첫요청일때만생성
 
         String viewCnt = String.valueOf(redisTemplate.opsForValue().get("viewCnt::" + boardId));
 
@@ -216,9 +214,6 @@ public class BoardController {
 
         return "redirect:/boards/{boardId}";
 
-        // String ipAddress = getIpAddress(req);
-
-//        Long boardId = boardService.addBoardV2(user.getId(), boardPostDto);
     }
 
     private void makeUpdateCount(String key) {

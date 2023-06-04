@@ -30,7 +30,6 @@ public class RedisService {
         if (redisTemplate.hasKey(key)) {
             return false;
         }
-
         return true;
     }
     public void writeRequest(String clientAddress, Long postId) {

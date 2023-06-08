@@ -40,7 +40,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             member.phoneNumber,
             member.email,
             member.countOfBoards,
-            member.countOfComments)).from(member).stream().collect(Collectors.toList());
+            member.countOfComments)).from(member).fetch();
   }
 
 

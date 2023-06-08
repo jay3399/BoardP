@@ -35,7 +35,6 @@ public class AdminController {
 
     private final BoardService boardService;
 
-
     private final SpringDataBoardRepository repository;
 
     private final PenaltyService penaltyService;
@@ -46,13 +45,21 @@ public class AdminController {
     @GetMapping("/members")
     public String getMember(Model model) {
 
-        List<Member> members = memberRepository.findAll();
+        /**
+         * 스트림 사용필요없이 ( 성능저하 )  , QueryDSL 기능 이용 조회동시에 즉시 생성자사용하여 매핑.
+         */
 
-        List<MemberListDto> memberList = members.stream().map(
-            member -> MemberListDto.from(member)
-        ).collect(Collectors.toList());
+        List<MemberListDto> memberListDto = memberRepository.getMemberListDto();
 
-        model.addAttribute("members", members);
+        model.addAttribute("members", memberListDto);
+
+
+//        List<Member> members = memberRepository.findAll();
+//
+//        List<MemberListDto> memberList = members.stream().map(
+//            member -> MemberListDto.from(member)
+//        ).collect(Collectors.toList());
+
 
         return "/admin/adMemberList";
 

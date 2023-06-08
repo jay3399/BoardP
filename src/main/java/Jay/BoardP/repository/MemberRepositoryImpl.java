@@ -12,17 +12,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
-  private final EntityManager em;
-
   private final JPAQueryFactory jpaQueryFactory;
 
 
+  @Autowired
   public MemberRepositoryImpl(EntityManager em) {
-    this.em = em;
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
 

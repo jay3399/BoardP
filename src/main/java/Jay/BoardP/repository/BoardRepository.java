@@ -125,6 +125,8 @@ public class BoardRepository {
 
     public Page<Board> findAllV4(Pageable pageable, BoardSearch boardSearch, String categoryCode) {
 
+        CheckCategory check = new CheckCategoryImpl();
+
         String title = boardSearch.getTitle();
         String content = boardSearch.getContent();
         String complex = boardSearch.getComplex();
@@ -135,38 +137,67 @@ public class BoardRepository {
         builder.and(board.isDeleted.eq(false));
 
 
-        if (hasText(categoryCode)) {
+        if (check.validate(categoryCode))
             builder.and(getCategoryCode(categoryCode));
-        }
 
-        if (hasText(categoryCode) && hasText(title)) {
-            builder.and(getCategoryCode(categoryCode))
-                .and(getTitle(title));
-        } else if (hasText(title)) {
+        if (check.validate(categoryCode,title))
+            builder.and(getCategoryCode(categoryCode)).and(getTitle(title));
+        else if (check.validate(title)) {
             builder.and(getTitle(title));
         }
 
-        if (hasText(categoryCode) && hasText(content)) {
-            builder.and(getCategoryCode(categoryCode))
-                .and(getContent(content));
-        } else if (hasText(content)) {
+        if (check.validate(categoryCode , content))
+            builder.and(getCategoryCode(categoryCode)).and(getContent(content));
+        else if (check.validate(content)) {
             builder.and(getContent(content));
         }
 
-        if (hasText(categoryCode) && hasText(nickname)) {
-            builder.and(getCategoryCode(categoryCode))
-                .and(getNickname(nickname));
-        } else if (hasText(nickname)) {
+        if (check.validate(categoryCode , nickname))
+            builder.and(getCategoryCode(categoryCode)).and(getNickname(nickname));
+        else if (check.validate(nickname)) {
             builder.and(getNickname(nickname));
         }
 
-        if (hasText(categoryCode) && hasText(complex)) {
-            builder.and(getCategoryCode(categoryCode)).and(
-                getTitle(complex).or(getContent(complex)));
-        } else if (hasText(complex)) {
-            builder.and(
-                getTitle(complex).or(getContent(complex)));
+        if (check.validate(categoryCode , complex))
+            builder.and(getCategoryCode(categoryCode)).and(getTitle(complex).or(getContent(complex)));
+        else if (check.validate(complex)) {
+            builder.and(getTitle(complex).or(getContent(complex)));
         }
+
+
+
+//
+//        if (hasText(categoryCode)) {
+//            builder.and(getCategoryCode(categoryCode));
+//        }
+//
+//        if (hasText(categoryCode) && hasText(title)) {
+//            builder.and(getCategoryCode(categoryCode)).and(getTitle(title));
+//        } else if (hasText(title)) {
+//            builder.and(getTitle(title));
+//        }
+//
+//        if (hasText(categoryCode) && hasText(content)) {
+//            builder.and(getCategoryCode(categoryCode)).and(getContent(content));
+//        } else if (hasText(content)) {
+//            builder.and(getContent(content));
+//        }
+//
+//        if (hasText(categoryCode) && hasText(nickname)) {
+//            builder.and(getCategoryCode(categoryCode)).and(getNickname(nickname));
+//        } else if (hasText(nickname)) {
+//            builder.and(getNickname(nickname));
+//        }
+//
+//        if (hasText(categoryCode) && hasText(complex)) {
+//            builder.and(getCategoryCode(categoryCode)).and(getTitle(complex).or(getContent(complex)));
+//        } else if (hasText(complex)) {
+//            builder.and(getTitle(complex).or(getContent(complex)));
+//        }
+
+
+
+
 
         return adBoardRepository.findAll(builder, pageable);
     }

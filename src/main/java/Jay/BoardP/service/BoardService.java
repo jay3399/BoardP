@@ -12,6 +12,8 @@ import Jay.BoardP.domain.Category;
 import Jay.BoardP.domain.File;
 import Jay.BoardP.domain.Member;
 import Jay.BoardP.repository.BoardRepository;
+import Jay.BoardP.repository.CheckCategory;
+import Jay.BoardP.repository.CheckCategoryImpl;
 import Jay.BoardP.repository.MemberRepository;
 import java.io.IOException;
 import java.time.Duration;
@@ -132,6 +134,8 @@ public class BoardService {
     }
 
     public Page<BoardListDto> getBoardListV2(BoardSearch boardSearch, Pageable pageable, String categoryCode) {
+
+        CheckCategory checkCategory = new CheckCategoryImpl();
 
         Page<Board> allV4 = boardRepository.findAllV4(pageable, boardSearch, categoryCode);
 

@@ -6,13 +6,16 @@ import static Jay.BoardP.domain.QFile.file;
 import static org.springframework.util.StringUtils.hasText;
 
 import Jay.BoardP.controller.dto.BoardSearch;
+import Jay.BoardP.controller.dto.CategoryValue;
 import Jay.BoardP.controller.dto.FileDto;
 import Jay.BoardP.domain.Board;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,11 +59,16 @@ public class BoardRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    private final CheckCategory check;
+
+
     public BoardRepository(EntityManager em,
-        SpringDataBoardRepository springDataBoardRepository) {
+        SpringDataBoardRepository springDataBoardRepository, CheckCategory checkCategory) {
         this.em = em;
         this.adBoardRepository = springDataBoardRepository;
         this.jpaQueryFactory = new JPAQueryFactory(em);
+        this.check = checkCategory;
+
     }
 
     public Long saveBoardV2(Board board) {
@@ -87,11 +95,13 @@ public class BoardRepository {
         return adBoardRepository.findAllNotice(pageable);
     }
 
-    public Page<Board> findAllV2(Pageable pageable) {
+    public Page<Board> findAll(Pageable pageable) {
         return adBoardRepository.findAll(pageable);
     }
 
-    public Page<Board> findAllV3(Pageable pageable, BoardSearch boardSearch) {
+    public Page<Board> findAll(Pageable pageable, BoardSearch boardSearch) {
+
+        // 카테고리코드 x , 검색키워드만
 
         String title = boardSearch.getTitle();
         String content = boardSearch.getContent();
@@ -102,40 +112,130 @@ public class BoardRepository {
 
         builder.and(board.isDeleted.eq(false));
 
-        if (hasText(title)) {
-            builder.and(getTitle(title));
+        switch (check.validateValue(boardSearch)) {
+            case "title":
+                builder.and(getTitle(title));
+            case "content":
+                builder.and(getContent(content));
+            case "nickname":
+                builder.and(getNickname(nickname));
+            case "complex":
+                builder.and(getTitle(complex)).or(getContent(content));
         }
 
-        if (hasText(content)) {
-            builder.and(getContent(content));
-        }
+//        if (hasText(title)) {
+//            builder.and(getTitle(title));
+//        }
+//
+//        if (hasText(content)) {
+//            builder.and(getContent(content));
+//        }
+//
+//        if (hasText(nickname)) {
+//            builder.and(getNickname(nickname));
+//        }
+//
+//        if (hasText(complex)) {
+//            builder.and(getTitle(complex))
+//                .or(getContent(complex));
+//        }
+//
+//
+//
 
-        if (hasText(nickname)) {
-            builder.and(getNickname(nickname));
-        }
 
-        if (hasText(complex)) {
-            builder.and(getTitle(complex))
-                .or(getContent(complex));
-        }
+
 
         return adBoardRepository.findAll(builder, pageable);
 
     }
 
-    public Page<Board> findAllV4(Pageable pageable, BoardSearch boardSearch, String categoryCode) {
+    public Page<Board> findAll(Pageable pageable, BoardSearch boardSearch, String categoryCode) {
 
-        CheckCategory check = new CheckCategoryImpl();
 
         String title = boardSearch.getTitle();
         String content = boardSearch.getContent();
         String complex = boardSearch.getComplex();
         String nickname = boardSearch.getNickname();
 
+
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(board.isDeleted.eq(false));
 
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("title", builder.and(getCategoryCode(categoryCode)).and(getTitle(title)));
+        map.put("content", builder.and(getCategoryCode(categoryCode)).and(getContent(content)));
+        map.put("complex", builder.and(getCategoryCode(categoryCode)).and(getTitle(complex).or(getContent(complex))));
+        map.put("nickname", builder.and(getCategoryCode(categoryCode)).and(getNickname(nickname)));
+
+
+        //카테고리 코드 무조건 들어온다
+
+        if (check.validate(categoryCode))
+            builder.and(getCategoryCode(categoryCode));
+
+        if (check.validate(categoryCode, boardSearch)) {
+            map.get(check.validateValue(boardSearch));
+        }
+
+
+
+/**
+ *  -------------------------------V3.5 ----------------------------------------------------------
+ */
+
+
+
+        if (check.validate(categoryCode))
+            builder.and(getCategoryCode(categoryCode));
+
+        if (check.validate(categoryCode, title)) {
+            map.get("title");
+        } else if (check.validate(title)) {
+            builder.and(getTitle(title));
+        }
+
+        if (check.validate(categoryCode, content)) {
+            map.get("content");
+        } else if (check.validate(content)) {
+            builder.and(getContent(content));
+        }
+
+        if (check.validate(categoryCode, nickname)) {
+            map.get("nickname");
+        } else if (check.validate(nickname)) {
+            builder.and(getNickname(nickname));
+        }
+
+        if (check.validate(categoryCode, complex)) {
+            map.get("complex");
+        } else if (check.validate(complex)) {
+            builder.and(getTitle(complex).or(getContent(complex)));
+        }
+
+
+//        if (check.validate(categoryCode, boardSearch)) {
+//            map.get(check.validateValue(boardSearch));
+//        } else {
+//            switch (check.validateValue(boardSearch)) {
+//                case "title":
+//                    builder.and(getTitle(title));
+//                case "content":
+//                    builder.and(getContent(content));
+//                case "nickname":
+//                    builder.and(getNickname(nickname));
+//                case "complex":
+//                    builder.and(getTitle(complex).or(getContent(complex)));
+//            }
+//        }
+
+
+/**
+ *  -------------------------------V2 ----------------------------------------------------------
+ */
 
         if (check.validate(categoryCode))
             builder.and(getCategoryCode(categoryCode));
@@ -164,9 +264,9 @@ public class BoardRepository {
             builder.and(getTitle(complex).or(getContent(complex)));
         }
 
-
-
-//
+/**
+ *  -------------------------------V1 ----------------------------------------------------------
+ */
 //        if (hasText(categoryCode)) {
 //            builder.and(getCategoryCode(categoryCode));
 //        }

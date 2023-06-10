@@ -95,11 +95,14 @@ public class BoardController {
 
         if (categoryCode.equals("ALL")) {
             if (searchExist(boardSearch)) {
+                //카테고리 x , 보드서치 o
                 boardListV2 = boardService.getBoardList(boardSearch, pageable);
             } else {
+               //카테고리 x , 보드서치 x
                 boardListV2 = boardService.getBoardWithoutSearch(pageable);
             }
         } else {
+            // 카테고리 o , 보드서치 o // 카테고리 o 보드서치 x
             boardListV2 = boardService.getBoardListV2(boardSearch, pageable, categoryCode);
         }
 

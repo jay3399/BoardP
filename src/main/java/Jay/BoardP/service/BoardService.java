@@ -137,7 +137,7 @@ public class BoardService {
 
         CheckCategory checkCategory = new CheckCategoryImpl();
 
-        Page<Board> allV4 = boardRepository.findAllV4(pageable, boardSearch, categoryCode);
+        Page<Board> allV4 = boardRepository.findAll(pageable, boardSearch, categoryCode);
 
         return allV4.map(BoardListDto::from);
 
@@ -147,14 +147,14 @@ public class BoardService {
 
     public Page<BoardListDto> getBoardList(BoardSearch boardSearch, Pageable pageable) {
 
-        Page<Board> allV3 = boardRepository.findAllV3(pageable, boardSearch);
+        Page<Board> allV3 = boardRepository.findAll(pageable, boardSearch);
         return allV3.map(BoardListDto::from);
 
     }
 
     public Page<BoardListDto> getPages(Pageable pageable) {
 
-        Page<Board> boards = boardRepository.findAllV2(pageable);
+        Page<Board> boards = boardRepository.findAll(pageable);
         return boards.map(BoardListDto::from);
     }
 //
